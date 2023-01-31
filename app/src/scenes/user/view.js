@@ -48,7 +48,7 @@ const Detail = ({ user }) => {
           toast.success("Updated!");
         } catch (e) {
           console.log(e);
-          // toast.error("Some Error!");
+          toast.error("Some Error!");
         }
       }}>
       {({ values, handleChange, handleSubmit, isSubmitting }) => {
