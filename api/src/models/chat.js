@@ -7,6 +7,7 @@ const Schema = new mongoose.Schema({
   content: { type: String },
   date: { type: Date, default: Date.now() },
   organisation: { type: String, trim: true },
+  avatar: { type: String },
 });
 
 const OBJ = mongoose.model(MODELNAME, Schema);

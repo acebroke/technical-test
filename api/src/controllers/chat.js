@@ -8,7 +8,6 @@ const SERVER_ERROR = "SERVER_ERROR";
 router.get("/all", passport.authenticate("user", { session: false }), async (req, res) => {
   try {
     const data = await ChatObject.find({ organisation: req.user.organisation });
-    console.log("data messages =>", data);
     return res.status(200).send({ ok: true, data });
   } catch (error) {
     console.log(error);
@@ -19,8 +18,12 @@ router.get("/all", passport.authenticate("user", { session: false }), async (req
 // route for create new message in chat collection
 router.post("/new", passport.authenticate("user", { session: false }), async (req, res) => {
   try {
-    console.log({ content: req.body.content, organisation: req.user.organisation, name: req.user.name });
-    const data = await ChatObject.create({ content: req.body.content, organisation: req.user.organisation, name: req.user.name });
+    const data = await ChatObject.create({
+      content: req.body.content,
+      organisation: req.user.organisation,
+      name: req.user.name,
+      avatar: req.user.avatar,
+    });
     return res.status(200).send({ data, ok: true });
   } catch (error) {
     console.log(error);

@@ -2,57 +2,26 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import api from "../../services/api";
 import Moment from "react-moment";
-
+import MyMessage from "../../components/MyMessage";
+import Message from "../../components/Message";
 const Chat = () => {
   const user = useSelector((state) => state.Auth.user);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesList = useRef(null);
 
-  // Component to represent a single message from other user
-  const Message = ({ message, name, date }) => {
-    return (
-      <div className="flex flex-row gap-2  my-2 mx-1">
-        <img src={user.avatar} className="w-9 h-9 bg-[#aaa] rounded-full cursor-pointer object-cover" />
-        <div className="flex flex-col">
-          <div className="flex flex-row gap-2">
-            <div className="font-bold">{name}</div>
-            <div className="text-[#BDBDBD]">
-              <Moment format="hh:mm A">{date}</Moment>
-            </div>
-          </div>
-          <div className="text-[#212325]">{message}</div>
-        </div>
-      </div>
-    );
-  };
-
-  // Component to represent a single message from current user
-  const MyMessage = ({ message, name, date }) => {
-    return (
-      <div className="flex flex-row gap-2 justify-end my-2 mx-1">
-        <div className="flex flex-col">
-          <div className="flex flex-row gap-2">
-            <div className="font-bold">{name}</div>
-            <div className="text-[#BDBDBD]">
-              <Moment format="hh:mm A">{date}</Moment>
-            </div>
-          </div>
-          <div className="text-[#212325]">{message}</div>
-        </div>
-        <img src={user.avatar} className="w-9 h-9 bg-[#aaa] rounded-full cursor-pointer object-cover" />
-      </div>
-    );
-  };
-
   useEffect(() => {
-    (async () => {
-      // fetch messages from server
+    // Fetch messages from server and scroll to bottom of messages list on load and every 60 seconds
+    const fetchMessages = async () => {
       const { data, ok } = await api.get(`/chat/all`);
       ok && setMessages(data);
-      // scroll to bottom of messages
-      messagesList.current.scrollTop = messagesList.current.scrollHeight;
-    })();
+    };
+    messagesList.current.scrollTop = messagesList.current.scrollHeight;
+    fetchMessages();
+
+    const interval = setInterval(fetchMessages, 60000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleSubmit = async (event) => {
@@ -71,9 +40,9 @@ const Chat = () => {
       <ul ref={messagesList} className="flex-1 border-8 border-r-8 bg-white shadow-md overflow-y-auto m-0 p-0 list-none flex flex-col h-64">
         {messages?.map((message, index) => {
           if (message.name === user.name) {
-            return <MyMessage key={index} message={message.content} date={message.date} name={message.name} />;
+            return <MyMessage key={index} message={message.content} date={message.date} name={message.name} avatar={message.avatar} />;
           } else {
-            return <Message key={index} message={message.content} date={message.date} name={message.name} />;
+            return <Message key={index} message={message.content} date={message.date} name={message.name} avatar={message.avatar} />;
           }
         })}
       </ul>
