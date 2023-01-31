@@ -10,7 +10,7 @@ import Activity from "./scenes/activity";
 import Auth from "./scenes/auth";
 import Project from "./scenes/project";
 import User from "./scenes/user";
-
+import Chat from "./scenes/chat";
 import Account from "./scenes/account";
 
 import Drawer from "./components/drawer";
@@ -59,6 +59,7 @@ const App = () => {
 
                 <RestrictedRoute path="/account" component={Account} />
                 <RestrictedRoute path="/project" component={Project} />
+                <RestrictedRoute path="/chat" component={Chat} />
                 <RestrictedRoute path="/" component={Home} />
               </Switch>
             </main>

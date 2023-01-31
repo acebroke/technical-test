@@ -16,7 +16,6 @@ const Activity = () => {
   const [project, setProject] = useState("");
 
   const u = useSelector((state) => state.Auth.user);
-
   useEffect(() => {
     const search = window.location.search;
     const params = new URLSearchParams(search);
@@ -88,7 +87,8 @@ const Activities = ({ date, user, project }) => {
 
   async function onSave() {
     for (let i = 0; i < activities.length; i++) {
-      await api.post(`/activity`, activities[i]);
+      const res = await api.post(`/activity`, activities[i]);
+      console.log("res", res);
       toast.success(`Saved ${activities[i].projectName}`);
     }
   }
@@ -96,7 +96,10 @@ const Activities = ({ date, user, project }) => {
   async function onDelete(i) {
     if (window.confirm("Are you sure ?")) {
       const activity = activities[i];
-      await api.remove(`/activity/${activity._id}`);
+      console.log("activity", activity);
+      const res = await api.remove(`/activity/${activity._id}`);
+      console.log("res delete", res);
+      res.ok && setActivities(activities.filter((a, index) => index !== i));
       toast.success(`Deleted ${activity.project}`);
     }
   }
