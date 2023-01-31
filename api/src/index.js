@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const express = require("express");
 const cookieParser = require("cookie-parser");
-
+const morgan = require("morgan");
 require("./mongo");
 
 const { PORT, APP_URL } = require("./config.js");
@@ -16,7 +16,7 @@ app.use(cors({ credentials: true, origin }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-
+app.use(morgan("dev"));
 app.use(express.static(__dirname + "/../public"));
 
 app.use("/user", require("./controllers/user"));
