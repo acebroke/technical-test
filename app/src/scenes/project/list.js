@@ -35,7 +35,7 @@ const ProjectList = () => {
 
   return (
     <div className="w-full p-2 md:!px-8">
-      <Create onChangeSearch={handleSearch} />
+      <Create setProjects={setProjects} onChangeSearch={handleSearch} />
       <div className="py-3">
         {activeProjects.map((hit) => {
           return (
@@ -92,7 +92,7 @@ const Budget = ({ project }) => {
   return <ProgressBar percentage={width} max={budget_max_monthly} value={total} />;
 };
 
-const Create = ({ onChangeSearch }) => {
+const Create = ({ onChangeSearch, setProjects }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -144,6 +144,11 @@ const Create = ({ onChangeSearch }) => {
                   values.status = "active";
                   const res = await api.post("/project", values);
                   if (!res.ok) throw res;
+                  res.data && setProjects((prev) => [...prev, res.data]);
+                  /* Fix beug : Add project to the list directly after creation
+                  I use hook setProjects to update the list of projects in the parent component.
+                  I make him a props for Create component.
+                  */
                   toast.success("Created!");
                   setOpen(false);
                 } catch (e) {
