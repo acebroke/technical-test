@@ -4,12 +4,14 @@ const cors = require("cors");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+
 require("./mongo");
 
 const { PORT, APP_URL } = require("./config.js");
 
 const app = express();
 
+require("./sockets/chat");
 const origin = [APP_URL, "https://join.le-stud.com"];
 
 app.use(cors({ credentials: true, origin }));
